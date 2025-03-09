@@ -1,0 +1,18 @@
+[submodule "submodules/depth_anything"]
+	path = submodules/depth_anything
+	url = https://github.com/danier97/Depth-Anything.git
+[submodule "submodules/depth_anything_v2"]
+	path = submodules/depth_anything_v2
+	url = https://github.com/danier97/Depth-Anything-V2.git
+[submodule "submodules/dust3r"]
+	path = submodules/dust3r
+	url = https://github.com/danier97/dust3r.git
+[submodule "submodules/moge"]
+	path = submodules/moge
+	url = https://github.com/danier97/MoGe.git
+[submodule "submodules/openlrm"]
+	path = submodules/openlrm
+	url = https://github.com/danier97/OpenLRM.git
+[submodule "submodules/probe3d"]
+	path = submodules/probe3d
+	url = https://github.com/danier97/probe3d.git
