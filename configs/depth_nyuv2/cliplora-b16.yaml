@@ -1,0 +1,69 @@
+task: depth_nyuv2
+model_name: cliplora-b16
+weight_decay: 0.001
+learning_rate: 0.001
+epochs: 10
+log_every_n_iter: 50
+create_model_func:
+  target: models.lora.CLIPLoRA
+  params:
+    r: 4
+    num_classes: 8
+    train_with_cls: false
+    train_upsample_factor: 7
+    task_head: mlp
+    lora_layer:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
+    - 10
+    - 11
+    ckpt: logs_finetune/finetune/cliplora-b16/all_cues/best_39.ckpt
+    backbone:
+      target: models.probe3d_backbones.CLIPBackbone
+      params:
+        arch: ViT-B-16
+    use_orig_model: true
+    assemble_mode: concat
+create_data_transform_func:
+  target: models.lora.get_cliplora_transform
+feature_extractor_config:
+  target: models.feature_extractor.Probe3DViTFeatureExtractor
+  params:
+    feat_type: patch
+    layer: 11
+probe_config:
+  type: depth
+  target: models.probes.DepthProbeModel
+  params:
+    in_features: 1536
+data_config:
+  num_workers: 4
+  train:
+    target: data.nyuv2.NYU_geonet
+    params:
+      data_path: /disk/scratch_ssd/danier/data/nyu_geonet/
+      split: train
+    batch_size: 8
+  val:
+    target: data.nyuv2.NYU_geonet
+    params:
+      data_path: /disk/scratch_ssd/danier/data/nyu_geonet/
+      split: val
+    batch_size: 8
+  test:
+    target: data.nyuv2.NYU_test
+    params:
+      data_path: /disk/scratch_ssd/danier/data/nyuv2/nyuv2_test.pkl
+    batch_size: 8
+loss_config:
+  target: submodules.probe3d.evals.utils.losses.DepthLoss
+metric_config:
+  target: utils.DepthMetric

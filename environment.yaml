@@ -1,0 +1,25 @@
+name: depthcues
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pytorch=2.2.2
+  - torchvision=0.17.2
+  - torchaudio=2.2.2
+  - pytorch-cuda=11.8
+  - einops=0.8.0
+  - timm=1.0.3
+  - transformers=4.39.3
+  - segment-anything
+  - omegaconf
+  - wandb=0.16.5
+  - diffusers=0.28.1
+  - loguru
+  - pycocotools
+  - open-clip-torch=2.23.0
+  - pip:
+      - opencv-python==4.9.0.80
+      - https://download.pytorch.org/whl/cu118/xformers-0.0.25.post1%2Bcu118-cp311-cp311-manylinux2014_x86_64.whl#sha256=17e55a8d33aa18bdad5b4723bd3924ffa4095ed65d5bc1d95a5ce7841deba3f4

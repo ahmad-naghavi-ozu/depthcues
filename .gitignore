@@ -1,0 +1,4 @@
+wandb/*
+logs/*
+logs_finetune/*
+*pycache*

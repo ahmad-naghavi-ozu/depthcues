@@ -1,0 +1,50 @@
+task: size_v2
+model_name: stablediffusion
+weight_decay: 0.01
+learning_rate: 0.001
+epochs: 120
+log_every_n_iter: 50
+create_model_func:
+  target: models.probe3d_backbones.StableDiffusionBackbone
+  params:
+    model_id: stabilityai/stable-diffusion-2-1
+    time_step: 1
+    return_multilayer: true
+feature_extractor_config:
+  target: models.feature_extractor.Probe3DViTFeatureExtractor
+  params:
+    feat_type: mask
+    layer: 1
+    use_cls: false
+probe_config:
+  type: mlp
+  target: models.probes.MlpProbeModel
+  params:
+    in_features: __check__model__
+    num_classes: 1
+data_config:
+  num_workers: 4
+  train:
+    target: data.SizeV2Dataset
+    params:
+      data_path: /raid/danier/data/size_v2/
+      split: train
+      return_mask: true
+    batch_size: 8
+  val:
+    target: data.SizeV2Dataset
+    params:
+      data_path: /raid/danier/data/size_v2/
+      split: val
+      return_mask: true
+    batch_size: 8
+  test:
+    target: data.SizeV2Dataset
+    params:
+      data_path: /raid/danier/data/size_v2/
+      split: test
+      return_mask: true
+      return_path: true
+    batch_size: 8
+loss_config:
+  target: torch.nn.BCEWithLogitsLoss

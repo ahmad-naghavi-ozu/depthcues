@@ -1,0 +1,46 @@
+task: depth_diw
+model_name: siglip-b16
+weight_decay: 0.001
+learning_rate: 0.001
+epochs: 1
+log_every_n_iter: 50
+create_model_func:
+  target: models.probe3d_backbones.SigLIPBackbone
+  params:
+    checkpoint: vit_base_patch16_siglip_384.webli
+    pretrained: true
+feature_extractor_config:
+  target: models.feature_extractor.Probe3DViTFeatureExtractor
+  params:
+    feat_type: dot
+    layer: 8
+    use_cls: false
+probe_config:
+  type: linear
+  target: models.probes.LinearProbeModel
+  params:
+    in_features: 768
+    num_classes: 1
+data_config:
+  num_workers: 4
+  train:
+    target: data.diw.DIW
+    params:
+      data_path: /disk/scratch_ssd/danier/data/diw/
+      split: train
+    batch_size: 8
+  val:
+    target: data.diw.DIW
+    params:
+      data_path: /disk/scratch_ssd/danier/data/diw/
+      split: val
+    batch_size: 8
+  test:
+    target: data.diw.DIW
+    params:
+      data_path: /disk/scratch_ssd/danier/data/diw/
+      split: test
+      return_path: true
+    batch_size: 8
+loss_config:
+  target: torch.nn.BCEWithLogitsLoss

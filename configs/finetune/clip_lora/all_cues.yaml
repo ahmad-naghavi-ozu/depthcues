@@ -1,0 +1,90 @@
+model_name: cliplora-b16
+epochs: 40
+warmup_epochs: 5
+log_every_n_iter: 8
+learning_rate: 0.0001
+start_lr: 1.0e-06
+weight_decay: 0.01
+adapter_config:
+  target: models.lora.CLIPLoRA
+  params:
+    r: 4
+    num_classes: 8
+    train_with_cls: false
+    train_upsample_factor: 7
+    task_head: mlp
+    lora_layer:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
+    - 10
+    - 11
+create_model_func:
+  target: models.probe3d_backbones.CLIPBackbone
+  params:
+    arch: ViT-B-16
+create_data_transform_func:
+  target: models.probe3d_backbones.get_clip_transform
+data_config:
+  data_path: /raid/danier/data/
+  train_batch_size: 32
+  steps_per_cue: 8
+  num_workers: 4
+  cues:
+  - occlusion
+  - lightshadow
+  - perspective
+  - size
+  - texturegrad
+  - elevation
+  val_batch_size: 32
+  test_batch_size: 32
+loss_config:
+  occlusion:
+    target: torch.nn.BCEWithLogitsLoss
+  lightshadow:
+    target: torch.nn.BCEWithLogitsLoss
+  size:
+    target: torch.nn.BCEWithLogitsLoss
+  texturegrad:
+    target: torch.nn.BCEWithLogitsLoss
+  perspective:
+    target: utils.MSEWithLogitsLoss
+    params:
+      target_range:
+      - -1.5
+      - 1.5
+  elevation:
+    target: utils.MultiMSEWithLogitsLoss
+    params:
+      target_scales:
+      - 1
+      - 0.625
+metric_config:
+  occlusion:
+    target: utils.Accuracy
+  lightshadow:
+    target: utils.Accuracy
+  size:
+    target: utils.Accuracy
+  texturegrad:
+    target: utils.Accuracy
+  perspective:
+    target: utils.EuclideanDistanceWithLogits
+    params:
+      target_range:
+      - -1.5
+      - 1.5
+  elevation:
+    target: utils.HorizonErrorWithLogits
+    params:
+      target_scales:
+      - 1
+      - 0.625

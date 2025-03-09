@@ -1,0 +1,50 @@
+task: lightshadow_v1
+model_name: clip-b16
+weight_decay: 0.01
+learning_rate: 0.001
+epochs: 50
+log_every_n_iter: 50
+create_model_func:
+  target: models.probe3d_backbones.CLIPBackbone
+  params:
+    arch: ViT-B-16
+create_data_transform_func:
+  target: models.probe3d_backbones.get_clip_transform
+feature_extractor_config:
+  target: models.feature_extractor.Probe3DViTFeatureExtractor
+  params:
+    feat_type: mask
+    layer: 2
+    use_cls: false
+probe_config:
+  type: mlp
+  target: models.probes.MlpProbeModel
+  params:
+    in_features: 768
+    num_classes: 1
+data_config:
+  num_workers: 4
+  train:
+    target: data.LightshadowV1Dataset
+    params:
+      data_path: /disk/scratch_ssd/danier/data/lightshadow_v1/
+      split: train
+      return_mask: true
+    batch_size: 8
+  val:
+    target: data.LightshadowV1Dataset
+    params:
+      data_path: /disk/scratch_ssd/danier/data/lightshadow_v1/
+      split: val
+      return_mask: true
+    batch_size: 8
+  test:
+    target: data.LightshadowV1Dataset
+    params:
+      data_path: /disk/scratch_ssd/danier/data/lightshadow_v1/
+      split: test
+      return_mask: true
+      return_path: true
+    batch_size: 8
+loss_config:
+  target: torch.nn.BCEWithLogitsLoss

@@ -1,0 +1,50 @@
+task: texturegrad_v1
+model_name: vit-b16
+weight_decay: 0.01
+learning_rate: 0.001
+epochs: 60
+log_every_n_iter: 50
+create_model_func:
+  target: models.vit.TimmViTBackbone
+  params:
+    model_name: vit_base_patch16_224.augreg2_in21k_ft_in1k
+create_data_transform_func:
+  target: models.vit.get_vit_transform
+feature_extractor_config:
+  target: models.feature_extractor.TimmViTFeatureExtractor
+  params:
+    feat_type: mask
+    layer: 5
+    use_cls: false
+probe_config:
+  type: mlp
+  target: models.probes.MlpProbeModel
+  params:
+    in_features: 768
+    num_classes: 1
+data_config:
+  num_workers: 4
+  train:
+    target: data.TexturegradV1Dataset
+    params:
+      data_path: /raid/danier/data/texturegrad_v1/
+      split: train
+      return_mask: true
+    batch_size: 8
+  val:
+    target: data.TexturegradV1Dataset
+    params:
+      data_path: /raid/danier/data/texturegrad_v1/
+      split: val
+      return_mask: true
+    batch_size: 8
+  test:
+    target: data.TexturegradV1Dataset
+    params:
+      data_path: /raid/danier/data/texturegrad_v1/
+      split: test
+      return_mask: true
+      return_path: true
+    batch_size: 8
+loss_config:
+  target: torch.nn.BCEWithLogitsLoss

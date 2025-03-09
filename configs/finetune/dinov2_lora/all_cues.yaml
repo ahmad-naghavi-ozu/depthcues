@@ -1,0 +1,79 @@
+model_name: dinov2lora-b14
+epochs: 40
+warmup_epochs: 5
+log_every_n_iter: 8
+learning_rate: 0.001
+start_lr: 1.0e-05
+weight_decay: 0.1
+adapter_config:
+  target: models.lora.TimmViTLoRA
+  params:
+    r: 4
+    num_classes: 8
+    train_with_cls: false
+    train_upsample_factor: 7
+    task_head: mlp
+    lora_layer:
+    - 11
+create_model_func:
+  target: timm.create_model
+  params:
+    model_name: vit_base_patch14_dinov2.lvd142m
+    pretrained: true
+    num_classes: 0
+data_config:
+  data_path: /disk/scratch_ssd/danier/data/
+  train_batch_size: 32
+  steps_per_cue: 8
+  num_workers: 4
+  cues:
+  - occlusion
+  - lightshadow
+  - perspective
+  - size
+  - texturegrad
+  - elevation
+  val_batch_size: 32
+  test_batch_size: 32
+loss_config:
+  occlusion:
+    target: torch.nn.BCEWithLogitsLoss
+  lightshadow:
+    target: torch.nn.BCEWithLogitsLoss
+  size:
+    target: torch.nn.BCEWithLogitsLoss
+  texturegrad:
+    target: torch.nn.BCEWithLogitsLoss
+  perspective:
+    target: utils.MSEWithLogitsLoss
+    params:
+      target_range:
+      - -1.5
+      - 1.5
+  elevation:
+    target: utils.MultiMSEWithLogitsLoss
+    params:
+      target_scales:
+      - 1
+      - 0.625
+metric_config:
+  occlusion:
+    target: utils.Accuracy
+  lightshadow:
+    target: utils.Accuracy
+  size:
+    target: utils.Accuracy
+  texturegrad:
+    target: utils.Accuracy
+  perspective:
+    target: utils.EuclideanDistanceWithLogits
+    params:
+      target_range:
+      - -1.5
+      - 1.5
+  elevation:
+    target: utils.HorizonErrorWithLogits
+    params:
+      target_scales:
+      - 1
+      - 0.625

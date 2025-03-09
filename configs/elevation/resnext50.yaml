@@ -1,0 +1,56 @@
+task: elevation_v1
+model_name: resnext50
+weight_decay: 0.01
+learning_rate: 0.001
+epochs: 16
+log_every_n_iter: 50
+create_model_func:
+  target: models.resnet_backbones.ResNetBackbone
+  params:
+    model_name: resnext50_32x4d.tv_in1k
+create_data_transform_func:
+  target: models.resnet_backbones.get_resnet_transform
+feature_extractor_config:
+  target: models.feature_extractor.Probe3DViTFeatureExtractor
+  params:
+    feat_type: patch
+    layer: 3
+probe_config:
+  type: attn
+  target: models.probes.AttentiveProbeModel
+  params:
+    in_features: __check__model__
+    num_classes: 2
+data_config:
+  num_workers: 4
+  train:
+    target: data.ElevationV1Dataset
+    params:
+      data_path: /raid/danier/data/elevation_v1/
+      split: train
+    batch_size: 64
+  val:
+    target: data.ElevationV1Dataset
+    params:
+      data_path: /raid/danier/data/elevation_v1/
+      split: val
+    batch_size: 64
+  test:
+    target: data.ElevationV1Dataset
+    params:
+      data_path: /raid/danier/data/elevation_v1/
+      split: test
+      return_path: true
+    batch_size: 64
+loss_config:
+  target: utils.MultiMSEWithLogitsLoss
+  params:
+    target_scales:
+    - 1
+    - 0.625
+metric_config:
+  target: utils.HorizonErrorWithLogits
+  params:
+    target_scales:
+    - 1
+    - 0.625

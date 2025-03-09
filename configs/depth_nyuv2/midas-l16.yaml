@@ -1,0 +1,43 @@
+task: depth_nyuv2
+model_name: midas-l16
+weight_decay: 0.001
+learning_rate: 0.001
+epochs: 10
+log_every_n_iter: 50
+create_model_func:
+  target: models.probe3d_backbones.MidasBackbone
+  params:
+    midas: true
+feature_extractor_config:
+  target: models.feature_extractor.Probe3DViTFeatureExtractor
+  params:
+    feat_type: patch
+    layer: 11
+probe_config:
+  type: depth
+  target: models.probes.DepthProbeModel
+  params:
+    in_features: 1024
+data_config:
+  num_workers: 4
+  train:
+    target: data.nyuv2.NYU_geonet
+    params:
+      data_path: /disk/scratch_ssd/danier/data/nyu_geonet/
+      split: train
+    batch_size: 8
+  val:
+    target: data.nyuv2.NYU_geonet
+    params:
+      data_path: /disk/scratch_ssd/danier/data/nyu_geonet/
+      split: val
+    batch_size: 8
+  test:
+    target: data.nyuv2.NYU_test
+    params:
+      data_path: /disk/scratch_ssd/danier/data/nyuv2/nyuv2_test.pkl
+    batch_size: 8
+loss_config:
+  target: submodules.probe3d.evals.utils.losses.DepthLoss
+metric_config:
+  target: utils.DepthMetric

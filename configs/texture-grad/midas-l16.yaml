@@ -1,0 +1,48 @@
+task: texturegrad_v1
+model_name: midas-l16
+weight_decay: 0.01
+learning_rate: 0.001
+epochs: 60
+log_every_n_iter: 50
+create_model_func:
+  target: models.probe3d_backbones.MidasBackbone
+  params:
+    midas: true
+feature_extractor_config:
+  target: models.feature_extractor.Probe3DViTFeatureExtractor
+  params:
+    feat_type: mask
+    layer: 11
+    use_cls: false
+probe_config:
+  type: mlp
+  target: models.probes.MlpProbeModel
+  params:
+    in_features: 1024
+    num_classes: 1
+data_config:
+  num_workers: 4
+  train:
+    target: data.TexturegradV1Dataset
+    params:
+      data_path: /raid/danier/data/texturegrad_v1/
+      split: train
+      return_mask: true
+    batch_size: 8
+  val:
+    target: data.TexturegradV1Dataset
+    params:
+      data_path: /raid/danier/data/texturegrad_v1/
+      split: val
+      return_mask: true
+    batch_size: 8
+  test:
+    target: data.TexturegradV1Dataset
+    params:
+      data_path: /raid/danier/data/texturegrad_v1/
+      split: test
+      return_mask: true
+      return_path: true
+    batch_size: 8
+loss_config:
+  target: torch.nn.BCEWithLogitsLoss
