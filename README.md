@@ -140,10 +140,10 @@ This repository is adapted from [VPT](https://github.com/serre-lab/VPT) and [Pro
 If you find our work helpful, please consider citing:
 
 ```
-@article{danier2024depthcues,
-    title = {DepthCues: Evaluating Monocular Depth Perception in Large Vision Models},
-    author = {Danier, Duolikun and Aygün, Mehmet and Li, Changjian and Bilen, Hakan and Mac Aodha, Oisin},
-    journal = {CVPR},
-    year = {2025},
+@inproceedings{danier2025depthcues,
+  author    = {Danier, Duolikun and Aygün, Mehmet and Li, Changjian and Bilen, Hakan and Mac Aodha, Oisin},
+  title     = {{DepthCues}: Evaluating Monocular Depth Perception in Large Vision Models},
+  booktitle = {CVPR},
+  year      = {2025},
 } 
 ```
