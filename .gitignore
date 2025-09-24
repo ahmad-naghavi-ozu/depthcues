@@ -1,4 +1,193 @@
+# Exclude specified directories
+docs/
+tools/
+visualizations/
+
+# Python
 wandb/*
 logs/*
 logs_finetune/*
 *pycache*
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# Poetry
+poetry.lock
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# Machine Learning / AI specific
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.joblib
+*.model
+*.weights
+*.ckpt
+*.pth
+*.pt
+*.pb
+*.onnx
+*.tflite
+checkpoints/
+logs/
+runs/
+outputs/
+results/
+experiments/
+wandb/
+mlruns/
+.mlflow/
+
+# Data files (common formats)
+*.csv
+*.json
+*.xml
+*.parquet
+*.arrow
+*.feather
+*.tsv
+*.txt.gz
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Image/Video files
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.tif
+*.svg
+*.ico
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.flv
+
+# Audio files
+*.mp3
+*.wav
+*.flac
+*.aac
+*.ogg
+
+# System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.out
+*.err
+
+# Large model files (protect against accidental commits)
+*.bin
+*.safetensors
+models/
+pretrained/
+pretrained_models/
+
+# Configuration files with sensitive data
+.secrets
+.env.local
+.env.production
+config.ini
+settings.json
